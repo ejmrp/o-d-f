@@ -121,11 +121,15 @@ export async function handler(event){
       );
 
     if(submit.error){
-      return res(
-        500,
-        'transaction failed'
-      );
-    }
+
+  return {
+    statusCode:500,
+
+    body:JSON.stringify({
+      rpcError:submit.error
+    })
+  };
+}
 
     return {
       statusCode:200,
