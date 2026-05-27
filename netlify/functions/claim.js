@@ -8,15 +8,15 @@ import {
 
 import {
   rateLimit
-} from './middleware/ratelimit.js';
+} from '.functions/middleware/ratelimit.js';
 
 import {
   verifyCaptcha
-} from './middleware/captcha.js';
+} from '.functions/middleware/captcha.js';
 
 import {
   checkCooldown
-} from './middleware/cooldown.js';
+} from '.functions/middleware/cooldown.js';
 
 const MICRO = 1_000_000;
 
