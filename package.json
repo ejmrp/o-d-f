@@ -1,0 +1,16 @@
+{
+  "name": "octra-devnet-faucet",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build"
+  },
+  "dependencies": {
+    "@upstash/redis": "^1.35.0",
+    "tweetnacl": "^1.0.3"
+  },
+  "devDependencies": {
+    "vite": "^5.4.0"
+  }
+}
