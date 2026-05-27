@@ -8,15 +8,15 @@ import {
 
 import {
   rateLimit
-} from '.functions/middleware/ratelimit.js';
+} from './middleware/ratelimit.js';
 
 import {
   verifyCaptcha
-} from '.functions/middleware/captcha.js';
+} from './middleware/captcha.js';
 
 import {
   checkCooldown
-} from '.functions/middleware/cooldown.js';
+} from './middleware/cooldown.js';
 
 const MICRO = 1_000_000;
 
@@ -57,7 +57,7 @@ export async function handler(event){
     }
 
     const cooldown =
-      await checkCooldown(address);
+      await checkCooldown(address, ip);
 
     if(!cooldown){
       return res(429,'24h cooldown');
