@@ -140,13 +140,15 @@ export async function handler(event){
       })
     };
 
-  }catch{
+  }catch(err){
 
-    return res(
-      500,
-      'internal error'
-    );
-  }
+  return {
+    statusCode:500,
+
+    body:JSON.stringify({
+      realError:err.message
+    })
+  };
 }
 
 function res(code,msg){
