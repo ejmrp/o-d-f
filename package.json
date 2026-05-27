@@ -7,7 +7,7 @@
     "build": "vite build"
   },
   "dependencies": {
-    "@upstash/redis": "^1.35.0",
+    "@supabase/supabase-js": "^2.49.8",
     "tweetnacl": "^1.0.3"
   },
   "devDependencies": {
