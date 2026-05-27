@@ -1,40 +1,50 @@
-import { rpc } from './utils/rpc.js';
-import { signTx } from './utils/signer.js';
+const { rpc } =
+require('./utils/rpc.js');
 
-import {
+const { signTx } =
+require('./utils/signer.js');
+
+const {
   validAddress,
   getIP
-} from './utils/security.js';
+} = require('./utils/security.js');
 
-import {
+const {
   rateLimit
-} from './middleware/ratelimit.js';
+} = require('./middleware/ratelimit.js');
 
-import {
+const {
   verifyCaptcha
-} from './middleware/captcha.js';
+} = require('./middleware/captcha.js');
 
-import {
+const {
   checkCooldown
-} from './middleware/cooldown.js';
+} = require('./middleware/cooldown.js');
 
 const MICRO = 1_000_000;
 
-export async function handler(event){
+exports.handler = async (event)=>{
 
   try{
 
     if(event.httpMethod !== 'POST'){
-      return res(405,'method not allowed');
+      return res(
+        405,
+        'method not allowed'
+      );
     }
 
-    const ip = getIP(event);
+    const ip =
+      getIP(event);
 
     const allowed =
       await rateLimit(ip);
 
     if(!allowed){
-      return res(429,'too many requests');
+      return res(
+        429,
+        'too many requests'
+      );
     }
 
     const body =
@@ -46,21 +56,34 @@ export async function handler(event){
     const captcha =
       body.captcha;
 
-    if(
-      !await verifyCaptcha(captcha)
-    ){
-      return res(403,'captcha failed');
+    const captchaOk =
+      await verifyCaptcha(captcha);
+
+    if(!captchaOk){
+      return res(
+        403,
+        'captcha failed'
+      );
     }
 
     if(!validAddress(address)){
-      return res(400,'invalid address');
+      return res(
+        400,
+        'invalid address'
+      );
     }
 
     const cooldown =
-      await checkCooldown(address, ip);
+      await checkCooldown(
+        address,
+        ip
+      );
 
     if(!cooldown){
-      return res(429,'24h cooldown');
+      return res(
+        429,
+        '24h cooldown'
+      );
     }
 
     const bal =
@@ -71,35 +94,49 @@ export async function handler(event){
 
     const balance =
       parseFloat(
-        bal.result.balance || 0
+        bal?.result?.balance || 0
       );
 
     if(balance >= 15){
+
       return res(
         403,
         'balance too high'
       );
+
     }
 
     const faucet =
-      process.env.FAUCET_ADDRESS;
+      process.env
+      .FAUCET_ADDRESS;
 
     const nonceRes =
       await rpc(
-        'octra_balance',
+        'octra_account',
         [faucet]
       );
 
     const nonce =
-      nonceRes.result.nonce;
+      nonceRes?.result?.nonce || 0;
 
     const tx = {
+
       from: faucet,
+
       to_: address,
-      amount: String(1 * MICRO),
+
+      amount:
+        String(1 * MICRO),
+
       nonce,
-      timestamp: Date.now()/1000,
+
+      timestamp:
+        Math.floor(
+          Date.now()/1000
+        ),
+
       ou:'10000',
+
       op_type:'standard'
     };
 
@@ -109,7 +146,9 @@ export async function handler(event){
     const signature =
       await signTx(msg);
 
-    tx.signature = signature;
+    tx.signature =
+      signature;
+
     tx.public_key =
       process.env
       .FAUCET_PUBLIC_KEY;
@@ -122,40 +161,61 @@ export async function handler(event){
 
     if(submit.error){
 
-  return {
-    statusCode:500,
+      return {
+        statusCode:500,
 
-    body:JSON.stringify({
-      rpcError:submit.error
-    })
-  };
-}
+        body:JSON.stringify({
+          rpcError:
+            submit.error
+        })
+      };
+
+    }
 
     return {
+
       statusCode:200,
+
       body:JSON.stringify({
+
         success:true,
+
         txHash:
           submit.result.tx_hash
+
       })
+
     };
 
   }catch(err){
 
-  return {
-    statusCode:500,
+    return {
 
-    body:JSON.stringify({
-      realError:err.message
-    })
-  };
-}
+      statusCode:500,
+
+      body:JSON.stringify({
+
+        realError:
+          err.message
+
+      })
+
+    };
+
+  }
+
+};
 
 function res(code,msg){
+
   return {
+
     statusCode:code,
+
     body:JSON.stringify({
       error:msg
     })
+
   };
+
 }
