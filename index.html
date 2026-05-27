@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Octra Faucet</title>
+
+  <script
+    src="https://challenges.cloudflare.com/turnstile/v0/api.js"
+    async defer>
+  </script>
+
+  <link rel="stylesheet" href="/style.css">
+</head>
+
+<body>
+
+<div class="card">
+
+  <h1>Octra Devnet Faucet</h1>
+
+  <form id="claim-form">
+
+    <input
+      id="address"
+      placeholder="oct..."
+      required
+    />
+
+    <div
+      class="cf-turnstile"
+      data-sitekey="0x4AAAAAADXYq4dTFeFVIr3o">
+    </div>
+
+    <button id="claim-btn">
+      Claim 1 OCT
+    </button>
+
+  </form>
+
+  <div id="result"></div>
+
+</div>
+
+<script type="module" src="/app.js"></script>
+
+</body>
+</html>
