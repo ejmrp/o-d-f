@@ -3,12 +3,13 @@ const RPC =
 
 export async function rpc(
   method,
-  params=[]
+  params = []
 ){
 
   const res = await fetch(
     RPC,
     {
+
       method:'POST',
 
       headers:{
@@ -17,4 +18,20 @@ export async function rpc(
       },
 
       body:JSON.stringify({
-        json
+
+        jsonrpc:'2.0',
+
+        id:1,
+
+        method,
+
+        params
+
+      })
+
+    }
+  );
+
+  return await res.json();
+
+}
