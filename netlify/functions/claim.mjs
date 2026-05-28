@@ -1,37 +1,43 @@
-const { rpc } =
-require('./utils/rpc.mjs');
+import { rpc }
+from './utils/rpc.mjs';
 
-const { signTx } =
-require('./utils/signer.mjs');
+import { signTx }
+from './utils/signer.mjs';
 
-const {
+import {
   validAddress,
   getIP
-} = require('./utils/security.mjs');
+}
+from './utils/security.mjs';
 
-const {
+import {
   rateLimit
-} = require('./middleware/ratelimit.mjs');
+}
+from './middleware/ratelimit.mjs';
 
-const {
+import {
   verifyCaptcha
-} = require('./middleware/captcha.mjs');
+}
+from './middleware/captcha.mjs';
 
-const {
+import {
   checkCooldown
-} = require('./middleware/cooldown.mjs');
+}
+from './middleware/cooldown.mjs';
 
 const MICRO = 1_000_000;
 
-exports.handler = async (event)=>{
+export async function handler(event){
 
   try{
 
     if(event.httpMethod !== 'POST'){
+
       return res(
         405,
         'method not allowed'
       );
+
     }
 
     const ip =
@@ -41,10 +47,12 @@ exports.handler = async (event)=>{
       await rateLimit(ip);
 
     if(!allowed){
+
       return res(
         429,
         'too many requests'
       );
+
     }
 
     const body =
@@ -60,17 +68,21 @@ exports.handler = async (event)=>{
       await verifyCaptcha(captcha);
 
     if(!captchaOk){
+
       return res(
         403,
         'captcha failed'
       );
+
     }
 
     if(!validAddress(address)){
+
       return res(
         400,
         'invalid address'
       );
+
     }
 
     const cooldown =
@@ -80,10 +92,12 @@ exports.handler = async (event)=>{
       );
 
     if(!cooldown){
+
       return res(
         429,
         '24h cooldown'
       );
+
     }
 
     const bal =
@@ -138,6 +152,7 @@ exports.handler = async (event)=>{
       ou:'10000',
 
       op_type:'standard'
+
     };
 
     const msg =
@@ -162,12 +177,14 @@ exports.handler = async (event)=>{
     if(submit.error){
 
       return {
+
         statusCode:500,
 
         body:JSON.stringify({
           rpcError:
             submit.error
         })
+
       };
 
     }
@@ -204,7 +221,7 @@ exports.handler = async (event)=>{
 
   }
 
-};
+}
 
 function res(code,msg){
 
