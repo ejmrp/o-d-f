@@ -1,5 +1,5 @@
 import { supabase }
-from '../utils/supabase.js';
+from '../utils/supabase.mjs';
 
 export async function checkCooldown(
   wallet,
