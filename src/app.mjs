@@ -1,4 +1,4 @@
-import { API, EXPLORER } from './config.js';
+import { API, EXPLORER } from './config.mjs';
 
 const form = document.getElementById('claim-form');
 const input = document.getElementById('address');
