@@ -1,25 +1,25 @@
 const { rpc } =
-require('./utils/rpc.js');
+require('./utils/rpc.mjs');
 
 const { signTx } =
-require('./utils/signer.js');
+require('./utils/signer.mjs');
 
 const {
   validAddress,
   getIP
-} = require('./utils/security.js');
+} = require('./utils/security.mjs');
 
 const {
   rateLimit
-} = require('./middleware/ratelimit.js');
+} = require('./middleware/ratelimit.mjs');
 
 const {
   verifyCaptcha
-} = require('./middleware/captcha.js');
+} = require('./middleware/captcha.mjs');
 
 const {
   checkCooldown
-} = require('./middleware/cooldown.js');
+} = require('./middleware/cooldown.mjs');
 
 const MICRO = 1_000_000;
 
